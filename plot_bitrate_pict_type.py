@@ -19,7 +19,7 @@ def pict_type_info(
     temp = Output.split("\n")
     Output = []
     for i in range(len(temp)):
-        if temp[i].__contains__("Could not find ref with POC"):
+        if temp[i].__contains__("Could not find ref with POC") or temp[i].__contains__("Last message repeated"):
             continue
         Output.append(temp[i].split(","))
 
@@ -31,8 +31,13 @@ def pict_type_info(
 
     return frame_type, presentation_times, bits
 
-for i in range(len(os.listdir("/home/krishnasrikardurbha/Desktop/Dataset-3/cut_videos"))):
-    frame_type, presentation_times, bits = pict_type_info(video_path=os.path.join("/home/krishnasrikardurbha/Desktop/Dataset-3/cut_videos", "flight{}.mp4".format(i+1)))
+for i in range(len(os.listdir("dataset/streamed_videos")),0,-1):
+    frame_type, presentation_times, bits = pict_type_info(video_path=os.path.join("dataset/streamed_videos", "flight{}.mp4".format(i)))
+    N = len(presentation_times)//4
+    
+    frame_type = frame_type[N:N+40]
+    presentation_times = presentation_times[N:N+40]
+    bits = bits[N:N+40]
 
     # Plotting
     plt.figure(figsize=(10,6))
@@ -50,7 +55,7 @@ for i in range(len(os.listdir("/home/krishnasrikardurbha/Desktop/Dataset-3/cut_v
 
     # Save
     plt.legend()
-    plt.savefig("plots/{}.png".format(os.path.splitext("flight{}.png".format(i+1))[0]))
+    plt.savefig("plots/{}.png".format(os.path.splitext("flight{}.png".format(i))[0]))
 
     print ("flight{}".format(i+1))
     for i in range(0,len(frame_type),9):
