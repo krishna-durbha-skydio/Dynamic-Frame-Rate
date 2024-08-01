@@ -19,45 +19,65 @@ import functions.statistics as statistics
 import functions.utils as utils
 import defaults
 
-# Compressing Video to simulate at intermediate bitrates
-Bitrate2Filenames_Maps = [
-    ((2.75, 2.5, 2.25), (1,2,3,13,14,15,25,26,27,37,38,39)),
-    ((1.75, 1.5, 1.25), (4,5,6,16,17,18,28,29,30,40,41,42))
-]
 
-streamed_videos_path = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/streamed_videos"
-for bitrates, FlightIDs in Bitrate2Filenames_Maps:
-    for b in bitrates:
-        for id in FlightIDs:
-            # Video Path and Save Path
-            video_path = os.path.join(streamed_videos_path, "flight{}.mp4".format(id))
-            save_path = os.path.join(streamed_videos_path, "flight{}_{}.mp4".format(id,b))
+# Creating Synthetic Dataset
+stored_videos_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/stored_videos"
+compressed_videos_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/compressed_videos"
 
-            # Command to Compress Videos
-            cmd = software_commands.simulate_compress_video(
-                input_path=video_path,
-                video_codec="libx265",
-                output_bitrate=b,
-                output_path=save_path,
-                threads=8
-            )
+# Compressed videos for different resolution, fps and bitrates
+for resolution in [(1920,1080), (1280,720), (960,540)]:
+	resolution_string = "{}x{}".format(resolution[0], resolution[1])
+	for fps in [30,20,10]:
+		for bitrate in reversed([3, 2.75, 2.5, 2.25, 2, 1.75, 1.5, 1.25, 1, 0.75]):
+			# For each file in stored-videos
+			for flight_name in os.listdir(stored_videos_dir):
+				# Creating directories
+				os.makedirs(os.path.join(compressed_videos_dir, resolution_string, str(fps), str(bitrate)), exist_ok=True)
 
-            # Execute
-            subprocess.run(shlex.split(cmd))
+				# Video Path and Save Path
+				video_path = os.path.join(stored_videos_dir, flight_name)
+				save_dir = os.path.join(compressed_videos_dir, resolution_string, str(fps), str(bitrate))
+
+				# Command to Compress Videos
+				cmd = software_commands.compress_video(
+					input_path=video_path,
+					video_codec="libx265",
+					output_resolution=resolution,
+					output_bitrate=bitrate,
+					output_fps=fps,
+					output_dir=save_dir,
+					threads=8
+				)
+
+				# Execute
+				subprocess.run(shlex.split(cmd))
 
 
-# # Splitting Videos that are streamed videos
-# time_length = 1
-# for video_file in os.listdir(defaults.streamed_videos):
-# 	# Command
-# 	cmd = software_commands.split_video_fixed_time(
-# 		input_path=os.path.join(defaults.streamed_videos, video_file),
-# 		time_length=time_length,
-# 		output_dir=os.path.join(defaults.video_segments)
-# 	)
+# Splitting Videos that are streamed videos
+time_length = 2
 
-# 	# Execute
-# 	subprocess.run(shlex.split(cmd))
+compressed_videos_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/compressed_videos"
+compressed_video_segments_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/compressed_video_segments"
+
+
+for resolution in [(1920,1080), (1280,720), (960,540)]:
+	resolution_string = "{}x{}".format(resolution[0], resolution[1])
+	for fps in [30,20,10]:
+		for bitrate in [3, 2.75, 2.5, 2.25, 2, 1.75, 1.5, 1.25, 1, 0.75]:
+			# For each compressed video
+			compressed_videos_setting_dir = os.path.join(compressed_videos_dir, resolution_string, str(fps), str(bitrate))
+			compressed_video_segments_setting_dir = os.path.join(compressed_video_segments_dir, resolution_string, str(fps), str(bitrate))
+			os.makedirs(compressed_video_segments_setting_dir, exist_ok=True)
+
+			for flight_name in os.listdir(compressed_videos_setting_dir):
+				cmd = software_commands.split_video_fixed_time(
+					input_path=os.path.join(compressed_videos_setting_dir, flight_name),
+					time_length=time_length,
+					output_dir=compressed_video_segments_setting_dir
+				)
+
+				# Execute
+				subprocess.run(shlex.split(cmd))
 
 
 # Saving Scores
@@ -71,7 +91,16 @@ def save_scores(videos_dir, quality_scores_dir, filename, replace=False):
 
 
 # Streamed Videos Parallel
-videos_dir = defaults.streamed_videos
-quality_scores_dir = os.path.join(defaults.quality_scores, "CONVIQT")
-for filename in tqdm(os.listdir(videos_dir)):
-	save_scores(videos_dir, quality_scores_dir, filename)
+quality_scores_dir = os.path.join(defaults.quality_scores)
+
+for resolution in [(1920,1080), (1280,720), (960,540)]:
+	resolution_string = "{}x{}".format(resolution[0], resolution[1])
+	for fps in [30,20,10]:
+		for bitrate in [3, 2.75, 2.5, 2.25, 2, 1.75, 1.5, 1.25, 1, 0.75]:
+			# For each compressed video
+			compressed_video_segments_setting_dir = os.path.join(compressed_video_segments_dir, resolution_string, str(fps), str(bitrate))
+			quality_scores_setting_dir = os.path.join(quality_scores_dir, resolution_string, str(fps), str(bitrate))
+			os.makedirs(quality_scores_setting_dir, exist_ok=True)
+
+			for flight_name in os.listdir(compressed_video_segments_setting_dir):
+				save_scores(compressed_video_segments_setting_dir, quality_scores_setting_dir, flight_name)

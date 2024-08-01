@@ -92,19 +92,19 @@ def compress_video(
 	# Input File
 	cmd_input = "-i {}".format(input_path)
 	
-	# Fps, Codec and Resolution
-	cmd_fps_codec_resolution = "-codec:v {} -vf 'scale={}x{}:flags=lanczos'".format(video_codec, output_resolution[0], output_resolution[1])
+	# Codec and Settings
+	cmd_codec_settings = "-codec:v libx265 -profile:v main -x265-params level-idc=50:tier=main:keyint=10 -bf 0"
+	cmd_resolution = "-vf 'scale={}x{}:flags=lanczos'".format(output_resolution[0], output_resolution[1])
 	
-	
-	# Bitrate
+	# Constant Bitrate and Constant Frame-Rate
 	bitrate = output_bitrate * 1000 # (Converting to kbps)
-	cmd_bitrate = "-b:v {}k -minrate {}k -maxrate {}k -bufsize {}k -r {}".format(bitrate, bitrate, bitrate, bitrate, output_fps)
+	cmd_bitrate = "-r {} -b:v {}k -minrate {}k -maxrate {}k -bufsize {}k".format(output_fps, bitrate, bitrate, bitrate, 2*bitrate)
 
 	# Output File
 	cmd_output = "-threads {} -y {}".format(threads, os.path.join(output_dir, filename + ext))
 
 	# Final Command
-	cmd = " ".join([cmd, cmd_input, cmd_fps_codec_resolution, cmd_bitrate, cmd_output])
+	cmd = " ".join([cmd, cmd_input, cmd_codec_settings, cmd_resolution, cmd_bitrate, cmd_output])
 	
 	return cmd
 
@@ -112,6 +112,7 @@ def compress_video(
 def simulate_compress_video(
 	input_path:str,
 	video_codec:str,
+	output_fps:float,
 	output_bitrate:float,
 	output_path:str,
 	threads:int
@@ -122,6 +123,7 @@ def simulate_compress_video(
 	Args:
 		input_path (str): Path to input video.
 		video_codec (str): Video codec used for compression.
+		output_fps (float): Output fps.
 		output_bitrate (float): Output bitrate in (Mbps).
 		output_path (str): Path to save compressed video.
 		threads (int): No.of threads used for compression.
@@ -135,10 +137,9 @@ def simulate_compress_video(
 	# Fps, Codec and Resolution
 	cmd_fps_codec_resolution = "-codec:v {}".format(video_codec)
 	
-	
 	# Bitrate
 	bitrate = int(output_bitrate * 1000) # (Converting to kbps)
-	cmd_bitrate = "-b:v {}k -minrate {}k -maxrate {}k -bufsize {}k".format(bitrate, bitrate, bitrate, bitrate)
+	cmd_bitrate = "-r {} -b:v {}k -minrate {}k -maxrate {}k -bufsize {}k".format(output_fps, bitrate, bitrate, bitrate, bitrate)
 
 	# Output File
 	cmd_output = "-threads {} -y {}".format(threads, output_path)
