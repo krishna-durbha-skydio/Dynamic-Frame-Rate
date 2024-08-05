@@ -31,33 +31,32 @@ def pict_type_info(
 
     return frame_type, presentation_times, bits
 
-for i in range(len(os.listdir("dataset/streamed_videos")),0,-1):
-    frame_type, presentation_times, bits = pict_type_info(video_path=os.path.join("dataset/streamed_videos", "flight{}.mp4".format(i)))
-    N = len(presentation_times)//4
-    
-    frame_type = frame_type[N:N+40]
-    presentation_times = presentation_times[N:N+40]
-    bits = bits[N:N+40]
 
-    # Plotting
-    plt.figure(figsize=(10,6))
-    plt.ylabel("Bitrate")
-    plt.xlabel('Presentation Time')
-    plt.grid()
+frame_type, presentation_times, bits = pict_type_info(video_path="/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/gop_size=10/compressed_videos/1920x1080/20/3/mode3_1.mp4")
+N = len(presentation_times)//4 + 5
 
-    # Plot I-frames
-    mask = np.where(frame_type == "I")
-    plt.stem(presentation_times[mask], bits[mask]/1e6, label="I-frames", markerfmt="r.")
+frame_type = frame_type[N:N+30]
+presentation_times = presentation_times[N:N+30]
+bits = bits[N:N+30]
 
-    # Plot P-frames
-    mask = np.where(frame_type == "P")
-    plt.stem(presentation_times[mask], bits[mask]/1e6, label="P-frames", markerfmt="b.")
+# Plotting
+plt.figure(figsize=(10,6))
+plt.ylabel("Bitrate")
+plt.xlabel('Presentation Time')
+plt.grid()
 
-    # Save
-    plt.legend()
-    plt.savefig("plots/{}.png".format(os.path.splitext("flight{}.png".format(i))[0]))
+# Plot I-frames
+mask = np.where(frame_type == "I")
+plt.stem(presentation_times[mask], bits[mask]/1e6, label="I-frames", markerfmt="r.")
 
-    print ("flight{}".format(i+1))
-    for i in range(0,len(frame_type),9):
-        print (bits[i]/1e6, np.mean(bits[i+1:i+8])/1e6, np.sum(bits[i:i+9])/1e6)
-    print ()
+# Plot P-frames
+mask = np.where(frame_type == "P")
+plt.stem(presentation_times[mask], bits[mask]/1e6, label="P-frames", markerfmt="b.")
+
+# Save
+plt.legend()
+plt.savefig("{}.png".format("flight"))
+
+for i in range(0,len(frame_type),10):
+    print (bits[i]/1e6, np.mean(bits[i+1:i+10])/1e6, np.sum(bits[i+1:i+10])/1e6, np.sum(bits[i:i+10])/1e6, 3/3)
+print ()

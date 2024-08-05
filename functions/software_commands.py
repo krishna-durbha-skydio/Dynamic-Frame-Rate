@@ -60,10 +60,10 @@ def get_metadata(
 
 def compress_video(
 	input_path:str,
-	video_codec:str,
 	output_resolution:tuple,
 	output_bitrate:float,
 	output_fps:float,
+	output_gop_size:int,
 	output_dir:str,
 	threads:int
 ):
@@ -72,11 +72,11 @@ def compress_video(
 
 	Args:
 		input_path (str): Path to input video.
-		video_codec (str): Video codec used for compression.
 		output_resolution (tuple): Output resolution.
 		output_bitrate (float): Output bitrate in (Mbps).
 		output_fps (float): Output fps.
 		output_dir (str): Directory to save parts of videos.
+		output_gop_size (int): GoP size of output video.
 		threads (int): No.of threads used for compression.
 	"""
 	# File
@@ -93,7 +93,7 @@ def compress_video(
 	cmd_input = "-i {}".format(input_path)
 	
 	# Codec and Settings
-	cmd_codec_settings = "-codec:v libx265 -profile:v main -x265-params level-idc=50:tier=main:keyint=10 -bf 0"
+	cmd_codec_settings = "-codec:v libx265 -profile:v main -x265-params level-idc=50:keyint={} -bf 0".format(output_gop_size)
 	cmd_resolution = "-vf 'scale={}x{}:flags=lanczos'".format(output_resolution[0], output_resolution[1])
 	
 	# Constant Bitrate and Constant Frame-Rate
