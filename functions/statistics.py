@@ -44,10 +44,13 @@ def get_statistics(
 	b = int(output[-1])/1e6
 
 	# Quality Score
-	quality_file_path = os.path.join(quality_dir, filename+".npy")
-	try:
-		q = np.load(quality_file_path, allow_pickle=True)[()][0]
-	except:
-		q = np.load(quality_file_path, allow_pickle=True)[()]
+	if quality_dir is not None:
+		quality_file_path = os.path.join(quality_dir, filename+".npy")
+		try:
+			q = np.load(quality_file_path, allow_pickle=True)[()][0]
+		except:
+			q = np.load(quality_file_path, allow_pickle=True)[()]
 
-	return resolution, fps, b, q
+		return resolution, fps, b, q
+	
+	return resolution, fps, b,
