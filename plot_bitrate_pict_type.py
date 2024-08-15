@@ -32,7 +32,7 @@ def pict_type_info(
     return frame_type, presentation_times, bits
 
 
-frame_type, presentation_times, bits = pict_type_info(video_path="/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/gop_size=10/compressed_videos/1920x1080/20/3/mode3_1.mp4")
+frame_type, presentation_times, bits = pict_type_info(video_path="/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/real_time/.mp4")
 N = len(presentation_times)//4 + 5
 
 frame_type = frame_type[N:N+30]
