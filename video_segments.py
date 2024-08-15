@@ -20,10 +20,10 @@ import functions.utils as utils
 import defaults
 
 # Paths
-streamed_videos_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/real_time/streamed_videos"
-streamed_videos_segments_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/real_time/streamed_videos_segments"
-streamed_videos_quality_scores_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/real_time/streamed_videos_quality_scores"
-streamed_videos_segments_quality_scores_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/real_time/streamed_videos_segments_quality_scores"
+streamed_videos_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/human_study/streamed_videos"
+streamed_videos_segments_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/human_study/streamed_videos_segments"
+streamed_videos_quality_scores_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/human_study/streamed_videos_quality_scores"
+streamed_videos_segments_quality_scores_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/human_study/streamed_videos_segments_quality_scores"
 
 
 # # # Splitting Videos that are streamed videos
@@ -51,7 +51,7 @@ def save_scores(videos_dir, quality_scores_dir, filename, replace=False):
 
 
 # Calculating quality of stream videos i.e entire flights
-for video_file in os.listdir(streamed_videos_dir):
+for video_file in tqdm(os.listdir(streamed_videos_dir)):
     save_scores(streamed_videos_dir, streamed_videos_quality_scores_dir, video_file)
 
 
