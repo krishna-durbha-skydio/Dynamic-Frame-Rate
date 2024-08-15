@@ -26,7 +26,7 @@ for gop_size in [10,30]:
     compressed_videos_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/gop_size={}/compressed_videos".format(int(gop_size))
 
     # Compressed videos for different resolution, fps and bitrates
-    for resolution in [(1920,1080)]:
+    for resolution in [(1920,1080), (1280,720)]:
         resolution_string = "{}x{}".format(resolution[0], resolution[1])
         for fps in [30,20,10,5,2]:
             for bitrate in reversed([3, 2.75, 2.5, 2.25, 2, 1.75, 1.5, 1.25, 1, 0.75]):
@@ -55,13 +55,13 @@ for gop_size in [10,30]:
 
 
     # Splitting Videos that are streamed videos
-    time_length = 2
+    time_length = 3
 
     compressed_videos_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/gop_size={}/compressed_videos".format(int(gop_size))
     compressed_video_segments_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/gop_size={}/compressed_video_segments".format(int(gop_size))
 
 
-    for resolution in [(1920,1080)]:
+    for resolution in [(1920,1080), (1280,720)]:
         resolution_string = "{}x{}".format(resolution[0], resolution[1])
         for fps in [30,20,10,5,2]:
             for bitrate in [3, 2.75, 2.5, 2.25, 2, 1.75, 1.5, 1.25, 1, 0.75]:
@@ -94,7 +94,7 @@ for gop_size in [10,30]:
     # Streamed Videos Parallel
     quality_scores_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/gop_size={}/compressed_videos_segments_quality_scores".format(int(gop_size))
 
-    for resolution in [(1920,1080)]:
+    for resolution in [(1920,1080), (1280,720)]:
         resolution_string = "{}x{}".format(resolution[0], resolution[1])
         for fps in [30,20,10,5,2]:
             for bitrate in [3, 2.75, 2.5, 2.25, 2, 1.75, 1.5, 1.25, 1, 0.75]:
