@@ -9,6 +9,7 @@ import pandas as pd
 import os, sys, warnings
 warnings.filterwarnings("ignore")
 import subprocess, shlex
+from tqdm import tqdm
 
 # Calculating SITI features using executable
 def calculate_SITI(
@@ -20,14 +21,13 @@ def calculate_SITI(
     """
 
     # Command
-    cmd = "/home/krishnasrikardurbha/Desktop/SITI/src/SITI/siti -i {}".format(input_video_path)
+    cmd = "SITI/src/SITI/siti -i {}".format(input_video_path)
 
     # GetOutput
-    subprocess.run(shlex.split(cmd))
-    assert False, ""
     output = subprocess.getoutput(cmd)
 
     return output
+
 
 # Convert Logs to csv
 def logs_2_csv(
@@ -58,10 +58,6 @@ def logs_2_csv(
     df.to_csv(csv_path, index=False)
 
 
-# for filename in os.listdir("dataset/stored_videos"):
-#     output = calculate_SITI(input_video_path="dataset/stored_videos/{}".format(filename))
-#     logs_2_csv(output, "dataset/features_temp/{}.csv".format(os.path.splitext(filename)[0]))
-
-res_3840p = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/stored_videos/mode0_1.mp4"
-res_1080p = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/gop_size=30/compressed_videos/1920x1080/30/3/mode0_1.mp4"
-calculate_SITI(input_video_path=res_1080p)
+for filename in tqdm(os.listdir("dataset/real_time/streamed_videos")):
+    output = calculate_SITI(input_video_path="dataset/real_time/streamed_videos/{}".format(filename))
+    logs_2_csv(output, "dataset/real_time/features/{}.csv".format(os.path.splitext(filename)[0]))

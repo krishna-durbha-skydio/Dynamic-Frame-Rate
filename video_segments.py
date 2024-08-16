@@ -22,22 +22,21 @@ import defaults
 # Paths
 streamed_videos_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/real_time/streamed_videos"
 streamed_videos_segments_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/real_time/streamed_videos_segments"
-streamed_videos_quality_scores_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/real_time/streamed_videos_quality_scores"
 streamed_videos_segments_quality_scores_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/real_time/streamed_videos_segments_quality_scores"
 
 
-# # # Splitting Videos that are streamed videos
-# time_length = 1
-# for video_file in os.listdir(streamed_videos_dir):
-# 	# Command
-# 	cmd = software_commands.split_video_fixed_time(
-# 		input_path=os.path.join(streamed_videos_dir, video_file),
-# 		time_length=time_length,
-# 		output_dir=os.path.join(streamed_videos_segments_dir)
-# 	)
+# Splitting Videos that are streamed videos
+time_length = 1
+for video_file in os.listdir(streamed_videos_dir):
+	# Command
+	cmd = software_commands.split_video_fixed_time(
+		input_path=os.path.join(streamed_videos_dir, video_file),
+		time_length=time_length,
+		output_dir=os.path.join(streamed_videos_segments_dir)
+	)
 
-# 	# Execute
-# 	subprocess.run(shlex.split(cmd))
+	# Execute
+	subprocess.run(shlex.split(cmd))
 
 
 # Loading CONVIQT Model
@@ -50,12 +49,7 @@ def save_scores(videos_dir, quality_scores_dir, filename, replace=False):
         np.save(os.path.join(quality_scores_dir, filename[:-4]+".npy"), quality)
 
 
-# Calculating quality of stream videos i.e entire flights
-for video_file in os.listdir(streamed_videos_dir):
-    save_scores(streamed_videos_dir, streamed_videos_quality_scores_dir, video_file)
-
-
-# # Calculating quality of streamed video segments i.e 1s segments of each flights
-# for video_file in tqdm(os.listdir(streamed_videos_segments_dir)):
-#     save_scores(streamed_videos_segments_dir, streamed_videos_segments_quality_scores_dir, video_file)
+# Calculating quality of streamed video segments i.e 1s segments of each flights
+for video_file in tqdm(os.listdir(streamed_videos_segments_dir)):
+    save_scores(streamed_videos_segments_dir, streamed_videos_segments_quality_scores_dir, video_file)
 

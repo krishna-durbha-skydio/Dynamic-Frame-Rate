@@ -32,31 +32,32 @@ def pict_type_info(
     return frame_type, presentation_times, bits
 
 
-frame_type, presentation_times, bits = pict_type_info(video_path="/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/real_time/.mp4")
-N = len(presentation_times)//4 + 5
+for filename in os.listdir("dataset/real_time/streamed_videos"):
+    frame_type, presentation_times, bits = pict_type_info(video_path="dataset/real_time/streamed_videos/{}".format(filename))
+    N = len(presentation_times)//4 + 5
 
-frame_type = frame_type[N:N+30]
-presentation_times = presentation_times[N:N+30]
-bits = bits[N:N+30]
+    frame_type = frame_type[N:N+30]
+    presentation_times = presentation_times[N:N+30]
+    bits = bits[N:N+30]
 
-# Plotting
-plt.figure(figsize=(10,6))
-plt.ylabel("Bitrate")
-plt.xlabel('Presentation Time')
-plt.grid()
+    # Plotting
+    plt.figure(figsize=(10,6))
+    plt.ylabel("Bitrate")
+    plt.xlabel('Presentation Time')
+    plt.grid()
 
-# Plot I-frames
-mask = np.where(frame_type == "I")
-plt.stem(presentation_times[mask], bits[mask]/1e6, label="I-frames", markerfmt="r.")
+    # Plot I-frames
+    mask = np.where(frame_type == "I")
+    plt.stem(presentation_times[mask], bits[mask]/1e6, label="I-frames", markerfmt="r.")
 
-# Plot P-frames
-mask = np.where(frame_type == "P")
-plt.stem(presentation_times[mask], bits[mask]/1e6, label="P-frames", markerfmt="b.")
+    # Plot P-frames
+    mask = np.where(frame_type == "P")
+    plt.stem(presentation_times[mask], bits[mask]/1e6, label="P-frames", markerfmt="b.")
 
-# Save
-plt.legend()
-plt.savefig("{}.png".format("flight"))
+    # Save
+    plt.legend()
+    plt.savefig("plots/bitrate_pict_type/{}.png".format(os.path.splitext(filename)[0]))
 
-for i in range(0,len(frame_type),10):
-    print (bits[i]/1e6, np.mean(bits[i+1:i+10])/1e6, np.sum(bits[i+1:i+10])/1e6, np.sum(bits[i:i+10])/1e6, 3/3)
-print ()
+    for i in range(0,len(frame_type),10):
+        print (bits[i]/1e6, np.mean(bits[i+1:i+10])/1e6, np.sum(bits[i+1:i+10])/1e6, np.sum(bits[i:i+10])/1e6, 3/3)
+    print ()
