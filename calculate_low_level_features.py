@@ -58,10 +58,6 @@ def logs_2_csv(
     df.to_csv(csv_path, index=False)
 
 
-# for filename in os.listdir("dataset/stored_videos"):
-#     output = calculate_SITI(input_video_path="dataset/stored_videos/{}".format(filename))
-#     logs_2_csv(output, "dataset/features_temp/{}.csv".format(os.path.splitext(filename)[0]))
-
-res_3840p = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/stored_videos/mode0_1.mp4"
-res_1080p = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/gop_size=30/compressed_videos/1920x1080/30/3/mode0_1.mp4"
-calculate_SITI(input_video_path=res_1080p)
+for filename in os.listdir("dataset/simulations/stored_videos"):
+    output = calculate_SITI(input_video_path="dataset/simulations/stored_videos/{}".format(filename))
+    logs_2_csv(output, "dataset/simulation/features/{}.csv".format(os.path.splitext(filename)[0]))

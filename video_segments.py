@@ -28,8 +28,8 @@ for gop_size in [10,30]:
     # Compressed videos for different resolution, fps and bitrates
     for resolution in [(1920,1080), (1280,720)]:
         resolution_string = "{}x{}".format(resolution[0], resolution[1])
-        for fps in [30,20,10,5,2]:
-            for bitrate in reversed([3, 2.75, 2.5, 2.25, 2, 1.75, 1.5, 1.25, 1, 0.75]):
+        for fps in [30,20,10]:
+            for bitrate in reversed([4, 3, 2.75, 2.5, 2.25, 2, 1.75, 1.5, 1.25, 1, 0.75, 0.5, 0.25]):
                 # For each file in stored-videos
                 for flight_name in os.listdir(stored_videos_dir):
                     # Creating directories
@@ -54,7 +54,7 @@ for gop_size in [10,30]:
                     subprocess.run(shlex.split(cmd))
 
 
-    # Splitting Videos that are streamed videos
+    # Splitting Videos
     time_length = 3
 
     compressed_videos_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/gop_size={}/compressed_videos".format(int(gop_size))
@@ -63,8 +63,8 @@ for gop_size in [10,30]:
 
     for resolution in [(1920,1080), (1280,720)]:
         resolution_string = "{}x{}".format(resolution[0], resolution[1])
-        for fps in [30,20,10,5,2]:
-            for bitrate in [3, 2.75, 2.5, 2.25, 2, 1.75, 1.5, 1.25, 1, 0.75]:
+        for fps in [30,20,10]:
+            for bitrate in [4, 3, 2.75, 2.5, 2.25, 2, 1.75, 1.5, 1.25, 1, 0.75, 0.5, 0.75]:
                 # For each compressed video
                 compressed_videos_setting_dir = os.path.join(compressed_videos_dir, resolution_string, str(fps), str(bitrate))
                 compressed_video_segments_setting_dir = os.path.join(compressed_video_segments_dir, resolution_string, str(fps), str(bitrate))
@@ -91,13 +91,13 @@ for gop_size in [10,30]:
             np.save(os.path.join(quality_scores_dir, filename[:-4]+".npy"), quality)
 
 
-    # Streamed Videos Parallel
+    # Calculating Scores
     quality_scores_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/gop_size={}/compressed_videos_segments_quality_scores".format(int(gop_size))
 
     for resolution in [(1920,1080), (1280,720)]:
         resolution_string = "{}x{}".format(resolution[0], resolution[1])
-        for fps in [30,20,10,5,2]:
-            for bitrate in [3, 2.75, 2.5, 2.25, 2, 1.75, 1.5, 1.25, 1, 0.75]:
+        for fps in [30,20,10]:
+            for bitrate in [4, 3, 2.75, 2.5, 2.25, 2, 1.75, 1.5, 1.25, 1, 0.75, 0.5, 0.25]:
                 # For each compressed video
                 compressed_video_segments_setting_dir = os.path.join(compressed_video_segments_dir, resolution_string, str(fps), str(bitrate))
                 quality_scores_setting_dir = os.path.join(quality_scores_dir, resolution_string, str(fps), str(bitrate))
