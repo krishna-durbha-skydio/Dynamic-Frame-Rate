@@ -21,8 +21,8 @@ import defaults
 
 
 # Creating Synthetic Dataset
-stored_videos_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/simulations/stored_videos"
-compressed_videos_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/simulations/gop_size=10/compressed_videos"
+stored_videos_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/framerate_switching_bitrates/stored_videos"
+compressed_videos_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/framerate_switching_bitrates/gop_size=10/compressed_videos"
 
 # Compressed videos for different resolution, fps and bitrates
 for resolution in [(1920,1080)]:
@@ -56,8 +56,8 @@ for resolution in [(1920,1080)]:
 # Splitting Videos that are streamed videos
 time_length = 2
 
-compressed_videos_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/simulations/gop_size=10/compressed_videos"
-compressed_video_segments_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/simulations/gop_size=10/compressed_video_segments"
+compressed_videos_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/framerate_switching_bitrates/gop_size=10/compressed_videos"
+compressed_video_segments_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/framerate_switching_bitrates/gop_size=10/compressed_videos_segments"
 
 
 for resolution in [(1920,1080)]:
@@ -91,7 +91,7 @@ def save_scores(videos_dir, quality_scores_dir, filename, replace=False):
 
 
 # Streamed Videos Parallel
-quality_scores_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/simulations/gop_size=10/compressed_videos_segments_quality_scores"
+quality_scores_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/framerate_switching_bitrates/gop_size=10/compressed_videos_segments_quality_scores"
 
 for resolution in [(1920,1080)]:
     resolution_string = "{}x{}".format(resolution[0], resolution[1])
