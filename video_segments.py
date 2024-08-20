@@ -22,14 +22,14 @@ import defaults
 
 for gop_size in [10,30]:
     # Creating Synthetic Dataset
-    stored_videos_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/stored_videos"
-    compressed_videos_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/gop_size={}/compressed_videos".format(int(gop_size))
+    stored_videos_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/simulations/stored_videos"
+    compressed_videos_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/simulations/gop_size={}/compressed_videos".format(int(gop_size))
 
     # Compressed videos for different resolution, fps and bitrates
     for resolution in [(1920,1080), (1280,720)]:
         resolution_string = "{}x{}".format(resolution[0], resolution[1])
         for fps in [30,20,10]:
-            for bitrate in reversed([4, 3, 2.75, 2.5, 2.25, 2, 1.75, 1.5, 1.25, 1, 0.75, 0.5, 0.25]):
+            for bitrate in reversed([4, 3.5, 3, 2.75, 2.5, 2.25, 2, 1.75, 1.5, 1.25, 1, 0.75, 0.5, 0.25]):
                 # For each file in stored-videos
                 for flight_name in os.listdir(stored_videos_dir):
                     # Creating directories
@@ -38,6 +38,11 @@ for gop_size in [10,30]:
                     # Video Path and Save Path
                     video_path = os.path.join(stored_videos_dir, flight_name)
                     save_dir = os.path.join(compressed_videos_dir, resolution_string, str(fps), str(bitrate))
+
+                    if os.path.exists(os.path.join(save_dir, os.path.splitext(flight_name)[0] + ".mp4")):
+                        print ("File {} Exists. Skipping".format(os.path.join(save_dir, os.path.splitext(flight_name)[0] + ".mp4")))
+                        print ()
+                        continue
 
                     # Command to Compress Videos
                     cmd = software_commands.compress_video(
@@ -57,24 +62,24 @@ for gop_size in [10,30]:
     # Splitting Videos
     time_length = 3
 
-    compressed_videos_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/gop_size={}/compressed_videos".format(int(gop_size))
-    compressed_video_segments_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/gop_size={}/compressed_video_segments".format(int(gop_size))
+    compressed_videos_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/simulations/gop_size={}/compressed_videos".format(int(gop_size))
+    compressed_videos_segments_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/simulations/gop_size={}/compressed_videos_segments".format(int(gop_size))
 
 
     for resolution in [(1920,1080), (1280,720)]:
         resolution_string = "{}x{}".format(resolution[0], resolution[1])
         for fps in [30,20,10]:
-            for bitrate in [4, 3, 2.75, 2.5, 2.25, 2, 1.75, 1.5, 1.25, 1, 0.75, 0.5, 0.75]:
+            for bitrate in [4, 3.5, 3, 2.75, 2.5, 2.25, 2, 1.75, 1.5, 1.25, 1, 0.75, 0.5, 0.25]:
                 # For each compressed video
                 compressed_videos_setting_dir = os.path.join(compressed_videos_dir, resolution_string, str(fps), str(bitrate))
-                compressed_video_segments_setting_dir = os.path.join(compressed_video_segments_dir, resolution_string, str(fps), str(bitrate))
-                os.makedirs(compressed_video_segments_setting_dir, exist_ok=True)
+                compressed_videos_segments_setting_dir = os.path.join(compressed_videos_segments_dir, resolution_string, str(fps), str(bitrate))
+                os.makedirs(compressed_videos_segments_setting_dir, exist_ok=True)
 
                 for flight_name in os.listdir(compressed_videos_setting_dir):
                     cmd = software_commands.split_video_fixed_time(
                         input_path=os.path.join(compressed_videos_setting_dir, flight_name),
                         time_length=time_length,
-                        output_dir=compressed_video_segments_setting_dir
+                        output_dir=compressed_videos_segments_setting_dir
                     )
 
                     # Execute
@@ -92,16 +97,16 @@ for gop_size in [10,30]:
 
 
     # Calculating Scores
-    quality_scores_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/gop_size={}/compressed_videos_segments_quality_scores".format(int(gop_size))
+    quality_scores_dir = "/home/krishnasrikardurbha/Desktop/Dynamic-Frame-Rate/dataset/simulations/gop_size={}/compressed_videos_segments_quality_scores".format(int(gop_size))
 
     for resolution in [(1920,1080), (1280,720)]:
         resolution_string = "{}x{}".format(resolution[0], resolution[1])
         for fps in [30,20,10]:
-            for bitrate in [4, 3, 2.75, 2.5, 2.25, 2, 1.75, 1.5, 1.25, 1, 0.75, 0.5, 0.25]:
+            for bitrate in [4, 3.5, 3, 2.75, 2.5, 2.25, 2, 1.75, 1.5, 1.25, 1, 0.75, 0.5, 0.25]:
                 # For each compressed video
-                compressed_video_segments_setting_dir = os.path.join(compressed_video_segments_dir, resolution_string, str(fps), str(bitrate))
+                compressed_videos_segments_setting_dir = os.path.join(compressed_videos_segments_dir, resolution_string, str(fps), str(bitrate))
                 quality_scores_setting_dir = os.path.join(quality_scores_dir, resolution_string, str(fps), str(bitrate))
                 os.makedirs(quality_scores_setting_dir, exist_ok=True)
 
-                for flight_name in os.listdir(compressed_video_segments_setting_dir):
-                    save_scores(compressed_video_segments_setting_dir, quality_scores_setting_dir, flight_name)
+                for flight_name in tqdm(os.listdir(compressed_videos_segments_setting_dir)):
+                    save_scores(compressed_videos_segments_setting_dir, quality_scores_setting_dir, flight_name)
